@@ -1,0 +1,9 @@
+int adicionarCredenciais();
+int listarCredenciais();
+int listarResumido();
+int listarDetalhes();
+int buscarCadastro();
+int editarCredenciais();
+void removerCredenciais();
+int exportarCredenciais();
+void menuListar();
