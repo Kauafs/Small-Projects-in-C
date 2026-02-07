@@ -119,56 +119,17 @@ int buscarCadastro(){
     }
 }
 
-int editarCredenciais(){
-    int usr, chc;
-    int i, maxBuff;
-    char newName[128];
-
-    printf("O que deseja alterar ?\n1 - (Nome)\n2 - (Senha)\n3 - (Observacao)\n(>):\t");
-    scanf(" %d",&usr);
-    clearBuffer();
-
+void editarCredenciais(){
     printf("Lista de Credenciais\n");
-    menuListar();
-
-    printf("Entre com o ID que quer alterar\n(>):\t");
-    scanf(" %d", &chc);
-
-    clearBuffer();
-
-    if (usr == 1)
-    {
-        printf("Alterar nome\n");
-        printf("Entre com o novo nome\n(>)\t");
-        fgets(newName, sizeof(newName), stdin);
-        clearCaracter(newName);
-        changeAny(newName, cad[chc].nameUser, sizeof(cad[chc].nameUser));
-    }
-
-    if (usr == 2)
-    {
-        printf("Alterar Senha\n");
-        printf("Entre com o nova senha\n(>)\t");
-        fgets(newName, sizeof(newName), stdin);
-        clearCaracter(newName);
-        changeAny(newName, cad[chc].passCipher, sizeof(cad[chc].passCipher));
-        crypto(cad[chc].passCipher);
-    }
-    
-    if (usr == 3)
-    {
-        printf("Alterar Descricao\n");
-        printf("Entre com o nova descricao\n(>)\t");
-        fgets(newName, sizeof(newName), stdin);
-        clearCaracter(newName);
-        changeAny(newName, cad[chc].observation, sizeof(cad[chc].observation));
-    }
+    if (menuListar() == 0)
+        return ;
+    changeData();
 }
 
 void removerCredenciais(){
     int rusr;
-    menuListar();
-
+    if (menuListar() == 0)
+        return ;
     printf("Informe o ID que deseja remover\n");
     scanf(" %d",&rusr);
 
@@ -176,7 +137,7 @@ void removerCredenciais(){
     
     if (rusr < 0 || rusr >= totalCadastro){
         printf("Nao existe esse ID\n");
-        return;
+        return ;
     }
 
     for (int i = rusr; i < totalCadastro - 1; i++)
@@ -210,14 +171,16 @@ int exportarCredenciais(){
 
 }
 
-void menuListar(){
+int menuListar(){
     char ent;
     printf("(A) or (a) - Lista Completa\n(R) or (r) Lista Resumida\n(D) or (d) - Detalhes\n(>):\t");
     ent = getchar();
     clearBuffer();
     if (ent == 'A' || ent == 'a'){
-        if (!listarCredenciais())
+        if (!listarCredenciais()){
             printf("Lista Completa Vazia\n");
+            return 0;
+        }
     }
     else if (ent == 'R' || ent == 'r'){
         if (listarResumido() == 0)
@@ -230,4 +193,47 @@ void menuListar(){
         printf("Opcao nao encontrada\n");   
         menuListar();
     }
+}
+
+void changeData(){
+    int usr, chc;
+    int i, maxBuff;
+    char newName[128];
+
+    printf("O que deseja alterar ?\n1 - (Nome)\n2 - (Senha)\n3 - (Observacao)\n(>):\t");
+    scanf(" %d",&usr);
+    clearBuffer();
+
+    if (usr == 1)
+    {
+        printf("Entre com o ID que quer alterar\n(>):\t");
+        scanf(" %d", &chc);
+        clearBuffer();
+        printf("Alterar nome\n");
+        printf("Entre com o novo nome\n(>)\t");
+        fgets(newName, sizeof(newName), stdin);
+        clearCaracter(newName);
+        changeAny(newName, cad[chc].nameUser, sizeof(cad[chc].nameUser));
+    } else if (usr == 2) {
+        printf("Entre com o ID que quer alterar\n(>):\t");
+        scanf(" %d", &chc);
+        clearBuffer();
+        printf("Alterar Senha\n");
+        printf("Entre com o nova senha\n(>)\t");
+        fgets(newName, sizeof(newName), stdin);
+        clearCaracter(newName);
+        changeAny(newName, cad[chc].passCipher, sizeof(cad[chc].passCipher));
+        crypto(cad[chc].passCipher);
+    } else if (usr == 3) {
+        printf("Entre com o ID que quer alterar\n(>):\t");
+        scanf(" %d", &chc);
+        clearBuffer();
+        printf("Alterar Descricao\n");
+        printf("Entre com o nova descricao\n(>)\t");
+        fgets(newName, sizeof(newName), stdin);
+        clearCaracter(newName);
+        changeAny(newName, cad[chc].observation, sizeof(cad[chc].observation));
+    } else
+        printf("[-] Nao existe essa opcao\n"); 
+
 }
